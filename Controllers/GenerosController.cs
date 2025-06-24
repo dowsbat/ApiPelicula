@@ -26,7 +26,7 @@ namespace ApiPelicula.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var genero = _appDbContext.Generos.FirstOrDefault(g => g.Id == id);
+            var genero = GetGenero(id);
             return Ok(genero);
 
         }
@@ -65,7 +65,7 @@ namespace ApiPelicula.Controllers
 
         public IActionResult Put(GeneroInput model, int id)
         {
-            var genero = _appDbContext.Generos.FirstOrDefault(g => g.Id == id);
+            var genero = GetGenero(id); ;
             if (genero == null) return BadRequest();
 
             genero.Nombre = model.Nombre;
@@ -78,7 +78,7 @@ namespace ApiPelicula.Controllers
 
         public IActionResult Delete(int id)
         {
-            var genero = _appDbContext.Generos.FirstOrDefault(g => g.Id == id);
+            var genero = GetGenero(id); ;
             if (genero == null) return BadRequest();
 
             _appDbContext.Generos.Remove(genero);
@@ -88,7 +88,10 @@ namespace ApiPelicula.Controllers
 
         }
 
-
+        private Genero? GetGenero(int id)
+        {
+            return _appDbContext.Generos.FirstOrDefault(g => g.Id == id);
+        }
 
 
 

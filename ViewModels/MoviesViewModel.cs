@@ -1,6 +1,8 @@
-﻿namespace ApiPelicula.Models
+﻿using ApiPelicula.Models;
+
+namespace ApiPelicula.ViewModels
 {
-    public class Movie
+    public class MoviesViewModel
     {
         public int Id { get; set; }
         public string? Titulo { get; set; }
@@ -9,7 +11,6 @@
         public string? Sinopsis { get; set; }
         public double Rating { get; set; }
         public int GeneroId { get; set; }
-        public Genero? Genero { get; set; }
-
+        public string? Genero { get; set; }
     }
 }

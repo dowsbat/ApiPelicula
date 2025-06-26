@@ -8,6 +8,7 @@ namespace ApiPelicula.Controllers
     [Route("/api/[controller]")] // de la clase
     public class GenerosController : ControllerBase
     {
+
         private readonly AppDbContext _appDbContext;
 
         public GenerosController(AppDbContext appDbContext)
@@ -37,7 +38,7 @@ namespace ApiPelicula.Controllers
             var genero = new Genero();
             genero.Nombre = model.Nombre;
             _appDbContext.Generos.Add(genero);
-            if (_appDbContext.SaveChanges() > 0) return Ok();
+            if (_appDbContext.SaveChanges() > 0) return Ok(genero);
 
             return BadRequest();
 
@@ -55,7 +56,7 @@ namespace ApiPelicula.Controllers
                 generos.Add(genero);
             }
             _appDbContext.Generos.AddRange(generos);
-            if (_appDbContext.SaveChanges() > 0) return Ok();
+            if (_appDbContext.SaveChanges() > 0) return Ok(generos);
 
             return BadRequest();
 
@@ -69,7 +70,7 @@ namespace ApiPelicula.Controllers
             if (genero == null) return BadRequest();
 
             genero.Nombre = model.Nombre;
-            if (_appDbContext.SaveChanges() > 0) return Ok();
+            if (_appDbContext.SaveChanges() > 0) return Ok(genero);
 
             return BadRequest();
         }

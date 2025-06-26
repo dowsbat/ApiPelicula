@@ -1,6 +1,9 @@
 ﻿using ApiPelicula.DataAccess;
 using ApiPelicula.Models;
+using ApiPelicula.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPelicula.Controllers
 {
@@ -9,37 +12,48 @@ namespace ApiPelicula.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly AppDbContext _appDbContext;
-        public MoviesController(AppDbContext appDbContext)
+        private readonly IMapper _mapper;
+
+
+        public MoviesController(AppDbContext appDbContext, IMapper mapper) // aqui recibe el db context uy el maper
         {
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var movies = _appDbContext.Movies.ToList();
-            if (movies == null) return NotFound();
+            //var movies = _appDbContext.Movies.ToList(); Select all pero sin hacer consutlas a otra tabla
+            var movies = _appDbContext.Movies.Include(m => m.Genero).ToList(); // el Include es como un inner Join
+            // los input es loq ue el cliente recibe y el viewmodel es lo que el le vas a mostrar al cliente
 
-            return Ok(movies);
+            if (movies == null) return NotFound();
+            //List es mas completo y Ienumerable solo trae lo basico 
+            var resultado = _mapper.Map<IEnumerable<MoviesViewModel>>(movies);
+            return Ok(resultado);
+
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var movie = _appDbContext.Movies.FirstOrDefault(x => x.Id == id);
+            var movie = _appDbContext.Movies.Include(m => m.Genero).FirstOrDefault(x => x.Id == id);
             return Ok(movie);
         }
 
         [HttpPost]
         public IActionResult Post(MovieInput movieInput)
         {
-            var movie = new Movie();
+            /* var movie = new Movie();
             movie.Titulo = movieInput.Titulo;
             movie.Estreno = movieInput.Estreno;
             movie.Sinopsis = movieInput.Sinopsis;
             movie.Director = movieInput.Director;
             movie.Rating = movieInput.Rating;
             movie.GeneroId = movieInput.GeneroId;
+            */
+            var movie = _mapper.Map<Movie>(movieInput);
             _appDbContext.Movies.Add(movie);
             if (_appDbContext.SaveChanges() > 0) return Ok();
 
@@ -52,14 +66,15 @@ namespace ApiPelicula.Controllers
         {
             var movie = _appDbContext.Movies.FirstOrDefault(x => x.Id == id);
             if (movie == null) return NotFound();
-
-            movie.Titulo = movieInput.Titulo;
-            movie.Estreno = movieInput.Estreno;
-            movie.Sinopsis = movieInput.Sinopsis;
-            movie.Director = movieInput.Director;
-            movie.Rating = movieInput.Rating;
-            movie.GeneroId = movieInput.GeneroId;
-
+            /*
+                        movie.Titulo = movieInput.Titulo;
+                        movie.Estreno = movieInput.Estreno;
+                        movie.Sinopsis = movieInput.Sinopsis;
+                        movie.Director = movieInput.Director;
+                        movie.Rating = movieInput.Rating;
+                        movie.GeneroId = movieInput.GeneroId;
+            */
+            _mapper.Map(movieInput, movie);
             if (_appDbContext.SaveChanges() > 0) return Ok();
 
             return BadRequest();

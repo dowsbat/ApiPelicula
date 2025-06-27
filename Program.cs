@@ -1,16 +1,19 @@
 using ApiPelicula.DataAccess;
 using Microsoft.EntityFrameworkCore;
-
+using FluentValidation;
+using ApiPelicula.Validators;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConn")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConn")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program)); // busca en todo en el ensamblado los profiles
+builder.Services.AddValidatorsFromAssemblyContaining<MovieValidator>();// con colocar solo una validator de la carpeta validators es mas que suficiente para detectar toda
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

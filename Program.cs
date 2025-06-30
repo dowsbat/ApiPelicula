@@ -2,8 +2,15 @@ using ApiPelicula.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using ApiPelicula.Validators;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();// con colocar solo una validator de la carpeta validators es mas que suficiente para detectar toda
+builder.Services.AddFluentValidationAutoValidation();
+
 
 
 builder.Services.AddControllers();
@@ -12,7 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program)); // busca en todo en el ensamblado los profiles
-builder.Services.AddValidatorsFromAssemblyContaining<MovieValidator>();// con colocar solo una validator de la carpeta validators es mas que suficiente para detectar toda
+
 
 var app = builder.Build();
 

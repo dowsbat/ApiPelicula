@@ -9,7 +9,7 @@ namespace ApiPelicula.Validators
         {
             RuleFor(m => m.Titulo)
                 .NotNull()
-                .NotEmpty()
+                .NotEmpty().WithMessage("El titulo no puede ir vacio")
                 .MaximumLength(50);
             RuleFor(m => m.Director)
                 .NotNull()
@@ -33,6 +33,8 @@ namespace ApiPelicula.Validators
                 .GreaterThan(DateTime.Today.Year);
             RuleFor(m => m.GeneroId)
                 .NotNull();
+
+
         }
     }
 }

@@ -29,7 +29,6 @@ namespace ApiPelicula.Controllers
         {
             var genero = GetGenero(id);
             return Ok(genero);
-
         }
 
         [HttpPost]

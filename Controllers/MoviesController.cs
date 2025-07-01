@@ -14,7 +14,6 @@ namespace ApiPelicula.Controllers
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
 
-
         public MoviesController(AppDbContext appDbContext, IMapper mapper) // aqui recibe el db context uy el maper
         {
             _appDbContext = appDbContext;
@@ -38,7 +37,9 @@ namespace ApiPelicula.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var movie = _appDbContext.Movies.Include(m => m.Genero).FirstOrDefault(x => x.Id == id);
+            var movie = GetMovie(id);
+            if (movie == null) return BadRequest();
+
             return Ok(movie);
         }
 
@@ -64,7 +65,7 @@ namespace ApiPelicula.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(MovieInput movieInput, int id)
         {
-            var movie = _appDbContext.Movies.FirstOrDefault(x => x.Id == id);
+            var movie = GetMovie(id);
             if (movie == null) return NotFound();
             /*
                         movie.Titulo = movieInput.Titulo;
@@ -84,13 +85,18 @@ namespace ApiPelicula.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var movie = _appDbContext.Movies.FirstOrDefault(x => x.Id == id);
+            var movie = GetMovie(id);
             if (movie == null) return NotFound();
 
             _appDbContext.Movies.Remove(movie);
             if (_appDbContext.SaveChanges() > 0) return NoContent();
             return BadRequest();
 
+        }
+
+        private Movie? GetMovie(int id)
+        {
+            return _appDbContext.Movies.Include(m => m.Genero).FirstOrDefault(m => m.Id == id);
         }
 
 

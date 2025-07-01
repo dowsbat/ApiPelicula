@@ -33,8 +33,11 @@ namespace ApiPelicula.Validators
                 .GreaterThan(DateTime.Today.Year);
             RuleFor(m => m.GeneroId)
                 .NotNull();
-
-
+            RuleFor(m => m.Duracion)
+                .GreaterThan(0)
+                .LessThan(400)
+                .NotEmpty()
+                .NotNull();
         }
     }
 }

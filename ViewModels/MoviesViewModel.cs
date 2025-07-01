@@ -10,6 +10,7 @@ namespace ApiPelicula.ViewModels
         public string? Director { get; set; }
         public string? Sinopsis { get; set; }
         public double Rating { get; set; }
+        public string? Duracion { get; set; }
         public int GeneroId { get; set; }
         public string? Genero { get; set; }
     }

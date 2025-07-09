@@ -59,7 +59,6 @@ namespace ApiPelicula.Controllers
         {
             var movie = GetMovie(id);
             if (movie == null) return BadRequest();
-
             return Ok(movie);
         }
 

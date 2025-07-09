@@ -14,7 +14,7 @@ namespace ApiPelicula.DataAccess.DataSeeder
             new() {Id =60,Nombre="Ciencia Ficcion"},
             new() {Id =70,Nombre="Terror"},
             new() {Id =80,Nombre="Romance"}
-
+ 
         };
 
         public static List<Movie> Movie = new List<Movie>()

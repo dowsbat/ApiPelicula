@@ -21,14 +21,34 @@ namespace ApiPelicula.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAll(string? titulo, double? rating, int? duracion, string? director, int? estreno)
         {
             //var movies = _appDbContext.Movies.ToList(); Select all pero sin hacer consutlas a otra tabla
             var movies = _appDbContext.Movies.Include(m => m.Genero).ToList(); // el Include es como un inner Join
-            // los input es loq ue el cliente recibe y el viewmodel es lo que el le vas a mostrar al cliente
-
+                                                                               // los input es loq ue el cliente recibe y el viewmodel es lo que el le vas a mostrar al cliente
             if (movies == null) return NotFound();
             //List es mas completo y Ienumerable solo trae lo basico 
+            if (!string.IsNullOrEmpty(titulo))
+            {
+                movies = movies.Where(m => m.Titulo.StartsWith(titulo, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (rating != null)
+            {
+                movies = movies.Where(m => m.Rating >= rating).ToList(); // > mayor que  < menor que
+            }
+            if (duracion != null)
+            {
+                movies = movies.Where(m => m.Duracion > duracion).ToList();
+            }
+            if (!string.IsNullOrEmpty(director))
+            {
+                movies = movies.Where(m => m.Director.StartsWith(director, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (estreno != null)
+            {
+                movies = movies.Where(m => m.Estreno == estreno).ToList();
+            }
+
             var resultado = _mapper.Map<IEnumerable<MoviesViewModel>>(movies);
             return Ok(resultado);
 

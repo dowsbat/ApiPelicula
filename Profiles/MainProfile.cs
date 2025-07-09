@@ -15,5 +15,6 @@ namespace ApiPelicula.Profiles
                 .ForMember(dst => dst.Genero, opt => opt.MapFrom(m => m.Genero.Nombre))
                 .ForMember(dst => dst.Duracion, opt => opt.MapFrom(m => m.Duracion / 60 + " Horas con " + m.Duracion % 60 + " Minutos "));
         }
+
     }
 }
